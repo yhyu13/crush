@@ -215,6 +215,8 @@ func (a *AssistantMessageItem) renderSpinning() string {
 		a.anim.SetLabel("Thinking")
 	} else if a.message.IsSummaryMessage {
 		a.anim.SetLabel("Summarizing")
+	} else if a.message.SpinnerLabel != "" {
+		a.anim.SetLabel(a.message.SpinnerLabel)
 	}
 	return a.anim.Render()
 }
@@ -235,7 +237,7 @@ func (a *AssistantMessageItem) isSpinning() bool {
 	isFinished := a.message.IsFinished()
 	hasContent := strings.TrimSpace(a.message.Content().Text) != ""
 	hasToolCalls := len(a.message.ToolCalls()) > 0
-	return (isThinking || !isFinished) && !hasContent && !hasToolCalls
+	return (isThinking || !isFinished || a.message.SpinnerLabel != "") && !hasContent && !hasToolCalls
 }
 
 // SetMessage is used to update the underlying message.

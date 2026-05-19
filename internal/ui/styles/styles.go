@@ -50,6 +50,10 @@ const (
 	LSPWarningIcon string = "W"
 	LSPInfoIcon    string = "I"
 	LSPHintIcon    string = "H"
+
+	CriticApproveIcon string = "✓"
+	CriticReviseIcon  string = "↻"
+	CriticHaltIcon    string = "✕"
 )
 
 const (
@@ -248,6 +252,10 @@ type Styles struct {
 			AssistantInfoModel     lipgloss.Style
 			AssistantInfoProvider  lipgloss.Style
 			AssistantInfoDuration  lipgloss.Style
+
+			CriticApproveBadge lipgloss.Style
+			CriticReviseBadge  lipgloss.Style
+			CriticHaltBadge    lipgloss.Style
 		}
 	}
 
@@ -1269,6 +1277,9 @@ func DefaultStyles() Styles {
 	s.Chat.Message.AssistantInfoModel = s.Muted
 	s.Chat.Message.AssistantInfoProvider = s.Subtle
 	s.Chat.Message.AssistantInfoDuration = s.Subtle
+	s.Chat.Message.CriticApproveBadge = s.Base.Foreground(green)
+	s.Chat.Message.CriticReviseBadge = s.Base.Foreground(yellow)
+	s.Chat.Message.CriticHaltBadge = s.Base.Foreground(red)
 
 	// Thinking section styles
 	s.Chat.Message.ThinkingBox = s.Subtle.Background(bgBaseLighter)

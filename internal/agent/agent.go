@@ -78,6 +78,9 @@ type SessionAgentCall struct {
 	FrequencyPenalty *float64
 	PresencePenalty  *float64
 	NonInteractive   bool
+	// CriticEnabled overrides the global critic setting for this call.
+	// nil uses the global config; false disables; true enables.
+	CriticEnabled *bool
 }
 
 type SessionAgent interface {

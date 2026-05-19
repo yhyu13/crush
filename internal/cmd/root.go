@@ -37,6 +37,8 @@ func init() {
 	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Debug")
 	rootCmd.Flags().BoolP("help", "h", false, "Help")
 	rootCmd.Flags().BoolP("yolo", "y", false, "Automatically accept all permissions (dangerous mode)")
+	rootCmd.Flags().Bool("critic", false, "Enable the self-critic agent for automated review loops")
+	rootCmd.Flags().String("critic-model", "", "Model override for the critic agent")
 
 	rootCmd.AddCommand(
 		runCmd,
@@ -48,6 +50,7 @@ func init() {
 		loginCmd,
 		statsCmd,
 		sessionCmd,
+		criticCmd,
 	)
 }
 
@@ -183,6 +186,8 @@ func setupApp(cmd *cobra.Command) (*app.App, error) {
 	debug, _ := cmd.Flags().GetBool("debug")
 	yolo, _ := cmd.Flags().GetBool("yolo")
 	dataDir, _ := cmd.Flags().GetString("data-dir")
+	critic, _ := cmd.Flags().GetBool("critic")
+	criticModel, _ := cmd.Flags().GetString("critic-model")
 	ctx := cmd.Context()
 
 	cwd, err := ResolveCwd(cmd)
@@ -200,6 +205,19 @@ func setupApp(cmd *cobra.Command) (*app.App, error) {
 		cfg.Permissions = &config.Permissions{}
 	}
 	cfg.Permissions.SkipRequests = yolo
+
+	if critic || criticModel != "" {
+		if cfg.Options.Critic == nil {
+			cfg.Options.Critic = &config.CriticConfig{}
+		}
+		if critic {
+			cfg.Options.Critic.Enabled = new(bool)
+			*cfg.Options.Critic.Enabled = true
+		}
+		if criticModel != "" {
+			cfg.Options.Critic.Model = criticModel
+		}
+	}
 
 	if err := createDotCrushDir(cfg.Options.DataDirectory); err != nil {
 		return nil, err

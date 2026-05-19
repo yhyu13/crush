@@ -9,6 +9,7 @@ import (
 	"github.com/atotto/clipboard"
 	"github.com/charmbracelet/crush/internal/app"
 	"github.com/charmbracelet/crush/internal/config"
+	"github.com/charmbracelet/crush/internal/skills/critic"
 	"github.com/charmbracelet/crush/internal/ui/styles"
 	"github.com/charmbracelet/crush/internal/ui/util"
 	uv "github.com/charmbracelet/ultraviolet"
@@ -34,6 +35,11 @@ func (c *Common) Config() *config.Config {
 // Store returns the config store associated with this [Common] instance.
 func (c *Common) Store() *config.ConfigStore {
 	return c.App.Store()
+}
+
+// CriticStore returns the critic review store associated with this [Common] instance.
+func (c *Common) CriticStore() *critic.Store {
+	return c.App.CriticStore
 }
 
 // DefaultCommon returns the default common UI configurations.

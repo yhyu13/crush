@@ -18,6 +18,9 @@ type CreateMessageParams struct {
 	Model            string
 	Provider         string
 	IsSummaryMessage bool
+	// SpinnerLabel is an optional label shown next to the spinner animation
+	// when the message has no content. It is not persisted to the database.
+	SpinnerLabel string
 }
 
 type Service interface {
@@ -89,6 +92,7 @@ func (s *service) Create(ctx context.Context, sessionID string, params CreateMes
 	if err != nil {
 		return Message{}, err
 	}
+	message.SpinnerLabel = params.SpinnerLabel
 	// Clone the message before publishing to avoid race conditions with
 	// concurrent modifications to the Parts slice.
 	s.Publish(pubsub.CreatedEvent, message.Clone())

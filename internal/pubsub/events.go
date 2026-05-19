@@ -6,7 +6,18 @@ const (
 	CreatedEvent EventType = "created"
 	UpdatedEvent EventType = "updated"
 	DeletedEvent EventType = "deleted"
+
+	CriticReviewTriggeredEvent EventType = "critic.review.triggered"
+	CriticVerdictRenderedEvent EventType = "critic.verdict.rendered"
+	CriticLoopCompletedEvent   EventType = "critic.loop.completed"
 )
+
+// CriticLoopEvent is published when a critic review loop terminates.
+type CriticLoopEvent struct {
+	SessionID    string
+	Iterations   int
+	FinalVerdict string
+}
 
 type Subscriber[T any] interface {
 	Subscribe(context.Context) <-chan Event[T]

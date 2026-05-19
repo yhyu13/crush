@@ -188,6 +188,7 @@ type AssistantInfoItem struct {
 	sty                 *styles.Styles
 	cfg                 *config.Config
 	lastUserMessageTime time.Time
+	criticVerdict       string
 }
 
 // NewAssistantInfoItem creates a new AssistantInfoItem.
@@ -205,6 +206,12 @@ func NewAssistantInfoItem(sty *styles.Styles, message *message.Message, cfg *con
 // ID implements MessageItem.
 func (a *AssistantInfoItem) ID() string {
 	return a.id
+}
+
+// SetCriticVerdict sets the critic verdict badge to display alongside model info.
+func (a *AssistantInfoItem) SetCriticVerdict(verdict string) {
+	a.criticVerdict = verdict
+	a.clearCache()
 }
 
 // RawRender implements MessageItem.
@@ -248,7 +255,19 @@ func (a *AssistantInfoItem) renderContent(width int) string {
 		providerName = providerConfig.Name
 	}
 	provider := a.sty.Chat.Message.AssistantInfoProvider.Render(fmt.Sprintf("via %s", providerName))
+	var badge string
+	switch a.criticVerdict {
+	case "approve":
+		badge = a.sty.Chat.Message.CriticApproveBadge.Render(styles.CriticApproveIcon)
+	case "revise":
+		badge = a.sty.Chat.Message.CriticReviseBadge.Render(styles.CriticReviseIcon)
+	case "halt":
+		badge = a.sty.Chat.Message.CriticHaltBadge.Render(styles.CriticHaltIcon)
+	}
 	assistant := fmt.Sprintf("%s %s %s %s", icon, modelFormatted, provider, infoMsg)
+	if badge != "" {
+		assistant += " " + badge
+	}
 	return common.Section(a.sty, assistant, width)
 }
 
@@ -305,7 +324,7 @@ func ShouldRenderAssistantMessage(msg *message.Message) bool {
 	isError := msg.FinishReason() == message.FinishReasonError
 	isCancelled := msg.FinishReason() == message.FinishReasonCanceled
 	hasToolCalls := len(msg.ToolCalls()) > 0
-	return !hasToolCalls || content != "" || thinking != "" || msg.IsThinking() || isError || isCancelled
+	return !hasToolCalls || content != "" || thinking != "" || msg.IsThinking() || isError || isCancelled || msg.SpinnerLabel != ""
 }
 
 // BuildToolResultMap creates a map of tool call IDs to their results from a list of messages.

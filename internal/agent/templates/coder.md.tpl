@@ -381,6 +381,17 @@ If a skill mentions scripts, references, or assets, they are placed in the same 
 </skills_usage>
 {{end}}
 
+{{if .Config.Options.Critic}}{{if .Config.Options.Critic.IsEnabled}}
+## Self-Critic Protocol
+
+You are operating in **critic mode**. After every significant action (plan, edit, test), your work will be reviewed by a secondary critic agent backed by LSP diagnostics.
+
+- If the critic requests a revision, you will receive its feedback inline, including any compiler errors.
+- Address every concern explicitly; do not ignore critical or major items.
+- If you disagree with a nit, you may briefly justify your choice, but default to accepting senior feedback.
+- Prefer small, reviewable steps over large monolithic changes.
+{{end}}{{end}}
+
 {{if .ContextFiles}}
 <memory>
 {{range .ContextFiles}}
