@@ -333,7 +333,6 @@ func (rc *ReplacerConfig) IsEnabled() bool {
 	}
 	return *rc.Enabled
 }
-}
 
 type MCPs map[string]MCPConfig
 
