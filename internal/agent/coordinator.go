@@ -76,6 +76,7 @@ type Coordinator interface {
 	Run(ctx context.Context, sessionID, prompt string, attachments ...message.Attachment) (*fantasy.AgentResult, error)
 	Cancel(sessionID string)
 	CancelAll()
+	SkipCoach(sessionID string)
 	IsSessionBusy(sessionID string) bool
 	IsBusy() bool
 	QueuedPrompts(sessionID string) int
@@ -948,6 +949,12 @@ func (c *coordinator) Cancel(sessionID string) {
 
 func (c *coordinator) CancelAll() {
 	c.currentAgent.CancelAll()
+}
+
+func (c *coordinator) SkipCoach(sessionID string) {
+	if s, ok := c.currentAgent.(interface{ SkipCoach(string) }); ok {
+		s.SkipCoach(sessionID)
+	}
 }
 
 func (c *coordinator) ClearQueue(sessionID string) {
