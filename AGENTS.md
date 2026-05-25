@@ -185,6 +185,15 @@ Builtin skills are embedded in the binary at `builtin/` and use the virtual `cru
 - User skills can override builtin skills of the same name (last occurrence wins in discovery order).
 - Current builtin skills: `crush-config`, `crush-hooks`, `jq`.
 
+### Agent-Facing Skill Development Docs
+
+The `.agents/skills/` directory contains skill documentation files that provide detailed guidance for developing specific features:
+
+| File | Purpose |
+|------|---------|
+| `.agents/skills/builtin-skills/SKILL.md` | How to create new builtin skills, embed system, discovery |
+| `.agents/skills/shell-builtins/SKILL.md` | How to create new shell builtins, handler pattern, context polling |
+
 ## Build/Test/Lint Commands
 
 - **Install linter** (first time only): `task lint:install`
